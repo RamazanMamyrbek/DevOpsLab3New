@@ -1,12 +1,12 @@
 pipeline {
   agent none
-
   options {
     skipStagesAfterUnstable()
+    skipDefaultCheckout()
   }
 
   stages {
-    stage("Build & Test in container") {
+    stage("Prepare container") {
       agent {
         docker {
           image 'openjdk:11.0.5-slim'
@@ -14,13 +14,9 @@ pipeline {
         }
       }
       stages {
-        stage('Checkout') {
+        stage('Build') {
           steps {
             checkout scm
-          }
-        }
-        stage('Compile') {
-          steps {
             sh './mvnw compile'
           }
         }
